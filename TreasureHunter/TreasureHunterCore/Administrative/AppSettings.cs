@@ -14,5 +14,19 @@ namespace TreasureHunterCore.Administrative
     internal class AppSettings
     {
 
+
+        #region Public Interface
+
+        public void ParseUserInputs(ref string[] args)
+        {
+            // Parse User Inputs and Apply the to settings
+        }
+
+        #endregion
+
+        #region Private Interface
+
+        #endregion
+
     }
 }

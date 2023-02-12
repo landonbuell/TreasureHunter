@@ -18,9 +18,23 @@ namespace TreasureHunterCore
         static void Main(string[] args)
         {
             // Main Executable
-            TreasureHunterApp app = new TreasureHunterApp();
+            AppSettings settings = new AppSettings();
+            settings.ParseUserInputs(ref args);
 
-            // 
+            // Build the App
+            TreasureHunterApp app = new TreasureHunterApp(settings);
+            TreasureHunterApp.RegisterSingleton(app);
+
+            // Run the Startup
+            app.Startup();
+
+            // Run the Execution
+            app.Execute();
+
+            // Run the Shutdown
+            app.Cleanup();
+
+            // All Done
 
         }
     }
