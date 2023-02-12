@@ -11,7 +11,7 @@
 
 namespace TreasureHunterCore
 {
-    class TreaureHunterCoreMain
+    class TreaureHunterMain
     {
         static void Main(string[] args)
         {

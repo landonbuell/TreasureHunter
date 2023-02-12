@@ -7,4 +7,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Core\" />
+    <Folder Include="Gameboard\" />
+    <Folder Include="Gamepiece\" />
+  </ItemGroup>
+
 </Project>
