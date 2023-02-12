@@ -2,9 +2,9 @@
  * Repository:      TreasureHunter
  * Solution:        TreatureHunter
  * Project:         TreasureHunterCore
- * Namespace:       Core
+ * Namespace:       Administrative
  * 
- * File:            Program.cs
+ * File:            TreasureHunterApp.cs
  * Author:          Landon Buell
  * Date:            Feb 2023 
  */
@@ -14,12 +14,14 @@ namespace TreasureHunterCore.Administrative
     internal class TreasureHunterApp
     {
         // Represents Main Treasure Hunter Game
+        private AppSettings _settings;
         private bool[] _statusFlags;
 
 
         internal TreasureHunterApp()
         {
             // Constructor
+            _settings = new AppSettings();
             _statusFlags = new bool[6];
         }
 
@@ -98,6 +100,7 @@ namespace TreasureHunterCore.Administrative
         #endregion
 
         #region Private Interface
+
 
         #endregion
 

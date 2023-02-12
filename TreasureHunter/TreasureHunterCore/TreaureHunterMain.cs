@@ -9,6 +9,8 @@
  * Date:            Feb 2023 
  */
 
+using TreasureHunterCore.Administrative;
+
 namespace TreasureHunterCore
 {
     class TreaureHunterMain
@@ -16,6 +18,9 @@ namespace TreasureHunterCore
         static void Main(string[] args)
         {
             // Main Executable
+            TreasureHunterApp app = new TreasureHunterApp();
+
+            // 
 
         }
     }
