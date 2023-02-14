@@ -74,7 +74,7 @@ namespace TreasureHunterCore.Administrative
         public bool IsDebugMode
         {
             // Get T/F If app is in Debug Mode
-            get { return IsDebugMode; } 
+            get { return IsDebugMode; }
         }
 
 

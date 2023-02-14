@@ -26,7 +26,19 @@ namespace TreasureHunterCore.Administrative
             FATAL = 5
         }
 
+        internal TextLogger(AppSettings settings)
+        {
+            // Constructor
+            _outputFile = Path.Combine(settings.OutputPath, "textLog.txt");
+            _logLevel = settings.MinimumLogLevel;
 
+            _logToFile = settings.LogToFile;
+            _logToConsole = settings.LogToConsole;
+        }
+
+        #region Getters and Setters
+
+        #endregion
 
 
     }
