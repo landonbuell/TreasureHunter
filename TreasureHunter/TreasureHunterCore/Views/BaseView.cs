@@ -9,6 +9,8 @@
  * Date:            Feb 2023 
  */
 
+using System.Text;
+
 using TreasureHunterCore.Core;
 
 namespace TreasureHunterCore.Views
@@ -18,15 +20,19 @@ namespace TreasureHunterCore.Views
         // A View is a "menu" or "window" that Accepts User Input
         private string _viewName;
         private string _viewTitle;
-        private string[] _viewDescription;
+        private StringBuilder _viewDescription;
         private ViewAction[] _actions;
 
 
         protected BaseView(
-            string viewName)
+            string viewName,
+            int numActions)
         {
-            // Constructor for
-            
+            // Constructor for BaseView
+            _viewName = viewName;
+            _viewTitle = viewName;
+            _viewDescription = new StringBuilder();
+            _actions = new ViewAction[numActions];
         }
 
         #region Getters and Setters
@@ -36,6 +42,8 @@ namespace TreasureHunterCore.Views
             // Get the Name of this View
             get { return _viewName; }
         }
+
+        #endregion
 
         #region Public Interface
 

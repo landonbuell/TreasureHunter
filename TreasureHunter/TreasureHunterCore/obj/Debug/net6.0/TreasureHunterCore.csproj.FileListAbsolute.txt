@@ -1,0 +1,15 @@
+C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\obj\Debug\net6.0\TreasureHunterCore.csproj.AssemblyReference.cache
+C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\obj\Debug\net6.0\TreasureHunterCore.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\obj\Debug\net6.0\TreasureHunterCore.AssemblyInfoInputs.cache
+C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\obj\Debug\net6.0\TreasureHunterCore.AssemblyInfo.cs
+C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\obj\Debug\net6.0\TreasureHunterCore.csproj.CoreCompileInputs.cache
+C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\bin\Debug\net6.0\TreasureHunterCore.exe
+C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\bin\Debug\net6.0\TreasureHunterCore.deps.json
+C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\bin\Debug\net6.0\TreasureHunterCore.runtimeconfig.json
+C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\bin\Debug\net6.0\TreasureHunterCore.dll
+C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\bin\Debug\net6.0\TreasureHunterCore.pdb
+C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\obj\Debug\net6.0\TreasureHunterCore.dll
+C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\obj\Debug\net6.0\refint\TreasureHunterCore.dll
+C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\obj\Debug\net6.0\TreasureHunterCore.pdb
+C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\obj\Debug\net6.0\TreasureHunterCore.genruntimeconfig.cache
+C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\obj\Debug\net6.0\ref\TreasureHunterCore.dll
