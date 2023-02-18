@@ -19,7 +19,6 @@ namespace TreasureHunterCore
         {
             // Main Executable
             AppSettings settings = new AppSettings();
-            settings.ParseUserInputs(ref args);
 
             // Build the App
             TreasureHunterApp app = new TreasureHunterApp(settings);

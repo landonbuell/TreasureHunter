@@ -9,6 +9,9 @@
  * Date:            Feb 2023 
  */
 
+using System.IO;
+using System.Text;
+
 using TreasureHunterCore.Core;
 
 namespace TreasureHunterCore.Administrative
@@ -39,7 +42,9 @@ namespace TreasureHunterCore.Administrative
             _status = AppStatus.UNKNOWN;
 
             _statusFlags = new bool[6];
-
+            _callbacksStartup = new List<PresequenceCallback>();
+            _callbacksExecute = new List<PresequenceCallback>();
+            _callbacksCleanup = new List<PresequenceCallback>();
 
             _userProfile = UserProfile.NullUserProfile();
 
@@ -145,6 +150,8 @@ namespace TreasureHunterCore.Administrative
             FinishedCleanup = true;
             return;
         }
+
+
 
         #endregion
 
