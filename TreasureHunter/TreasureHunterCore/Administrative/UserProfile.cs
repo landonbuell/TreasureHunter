@@ -30,9 +30,7 @@ namespace TreasureHunterCore.Administrative
         private uint _numberOfTotalRuns;
         private uint _numberOfSuccessfulRuns;
 
-        private uint _maxHealthPoints;
-        private uint _maxStaminaPoints;
-        private uint _maxMagicPoints;
+        private GamePieceData _gamePieceData;
 
         private UserProfile()
         {
@@ -48,9 +46,7 @@ namespace TreasureHunterCore.Administrative
             _numberOfTotalRuns = 0;
             _numberOfSuccessfulRuns = 0;
 
-            _maxHealthPoints = 0;
-            _maxStaminaPoints = 0;
-            _maxMagicPoints = 0;
+            _gamePieceData = new GamePieceData(_username);
         }
 
         private UserProfile(
@@ -67,10 +63,57 @@ namespace TreasureHunterCore.Administrative
             _lifetimeExperiencePoints = 0;
             _currentExperiencePoints = 0;
 
-            _maxHealthPoints = 100;
-            _maxStaminaPoints = 100;
-            _maxMagicPoints = 100;
+            _gamePieceData = new GamePieceData(_username);
+
         }
+
+        #region Getters and Setters
+
+        public string Username
+        {
+            // Get the Username
+            get { return _username; }
+        }
+
+        public PlayerTier PlayerTierLevel
+        {
+            // Get the Player's Tier Level
+            get { return _playerTier; }
+            protected set { _playerTier = value; }
+        }
+
+        public PlayerClass PlayerClass
+        {
+            // Get the Players's Class
+            get { return _playerClass; }
+        }
+
+        public DifficultyLevel DifficultyLevel
+        {
+            // Get the Difficulty Level
+            get { return _difficulty; }
+        }
+
+        public ulong LifetimeExperience
+        {
+            // Get the Total Lifetime Experiene Points
+            get { return _lifetimeExperiencePoints; }
+            protected set { _lifetimeExperiencePoints = value; }
+        }
+
+        public ulong CurrentExperiencePoints
+        {
+            // Get the Current Experience Points
+            get { return _currentExperiencePoints; }
+            protected set { _currentExperiencePoints = value; }
+        }
+
+        public GamePieceData GamePieceData
+        {
+            get { return _gamePieceData; }
+        }
+
+        #endregion
 
         #region Public Interface
 
