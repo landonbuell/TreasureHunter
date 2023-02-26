@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <Folder Include="Gameboard\" />
-    <Folder Include="Gamepiece\" />
   </ItemGroup>
 
 </Project>
