@@ -13,6 +13,7 @@ using System.IO;
 using System.Text;
 
 using TreasureHunterCore.Core;
+using TreasureHunterCore.Views;
 
 namespace TreasureHunterCore.Administrative
 {
@@ -22,7 +23,11 @@ namespace TreasureHunterCore.Administrative
         private static TreasureHunterApp? _instance = null;
 
         private AppSettings _settings;
+        private TextLogger _logger;
+
         private AppStatus _status;
+
+        private ViewManager _viewManager;
 
         private bool[] _statusFlags;
         private List<PresequenceCallback> _callbacksStartup;
@@ -39,7 +44,11 @@ namespace TreasureHunterCore.Administrative
         {
             // Constructor
             _settings = appSettings;
+            _logger = new TextLogger(appSettings);
+
             _status = AppStatus.UNKNOWN;
+
+            _viewManager = new ViewManager(this);
 
             _statusFlags = new bool[6];
             _callbacksStartup = new List<PresequenceCallback>();
@@ -111,6 +120,14 @@ namespace TreasureHunterCore.Administrative
 
         #region Public Interface
 
+        public void LogMessage(
+            string message,
+            TextLogger.LogLevel logLevel)
+        {
+            // Log a Message
+            _logger.LogMessage(message, logLevel);
+            return;
+        }
 
         public void Startup()
         {
