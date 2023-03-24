@@ -15,9 +15,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using TreasureHunterCore.Administrative;
+using TreasureHunterCore.Views;
 
-namespace TreasureHunterCore.Views
+namespace TreasureHunterCore.Administrative
 {
     internal class ViewManager : Manager
     {
