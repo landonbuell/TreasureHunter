@@ -19,6 +19,6 @@ namespace TreasureHunterCore.Core
     internal delegate AppStatus PresequenceCallback(TreasureHunterApp app);
 
     // Callback runs when user inputs at a view
-    internal delegate void ViewAction(BaseView currentView);
+    internal delegate bool ViewAction(BaseView currentView);
 
 }

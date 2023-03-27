@@ -24,6 +24,7 @@ namespace TreasureHunterCore.Administrative
         private bool _logToFile;
         private bool _logToConsole;
 
+        private BuildInfo _buildInfo;
         private bool _isDebugMode;
 
         public AppSettings()
@@ -36,6 +37,7 @@ namespace TreasureHunterCore.Administrative
             _logToFile = true;
             _logToConsole = false;
 
+            _buildInfo = new BuildInfo(0,0,0);
             _isDebugMode = true;
         }
 
@@ -71,6 +73,11 @@ namespace TreasureHunterCore.Administrative
             get { return _logToConsole; }
         }
 
+        public string BuildID
+        {
+            // Return the Current App Build ID
+            get { return _buildInfo.ToString(); }
+        }
         public bool IsDebugMode
         {
             // Get T/F If app is in Debug Mode
@@ -85,6 +92,30 @@ namespace TreasureHunterCore.Administrative
         #endregion
 
         #region Private Interface
+
+        private struct BuildInfo
+        {
+            private uint _buildMajor;
+            private uint _buildMinor;
+            private uint _buildRevision;
+
+            public BuildInfo(uint major,uint minor,uint rev)
+            {
+                // Constructor
+                _buildMajor = major;
+                _buildMinor = minor;
+                _buildRevision = rev;
+            }
+
+            public override string ToString()
+            {
+                // Cast to String
+                string result = String.Format("{0}.{1}.{2}",
+                    _buildMajor,_buildMinor, _buildRevision);
+                return result;
+            }
+
+        }
 
         #endregion
 

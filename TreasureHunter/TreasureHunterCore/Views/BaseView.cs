@@ -20,20 +20,24 @@ namespace TreasureHunterCore.Views
     {
         // A View is a "menu" or "window" that Accepts User Input
         private string _viewName;
-        private string _viewTitle;
-        private StringBuilder _viewDescription;
-        private TextActionPair[] _actions;
-
+        private List<string> _viewHeaderText;
+        private List<string> _viewFooterText;
+        private List<TextActionPair> _actions;
 
         protected BaseView(
-            string viewName,
-            uint numActions)
+            string viewName)
         {
             // Constructor for BaseView
             _viewName = viewName;
-            _viewTitle = viewName;
-            _viewDescription = new StringBuilder();
-            _actions = new TextActionPair[numActions];
+
+            _viewHeaderText = new List<string>();
+            _viewFooterText = new List<string>();
+
+            _actions = new List<TextActionPair>();
+
+            InitHeader();
+            InitFooter();
+            InitActions();
         }
 
         ~BaseView()
@@ -52,21 +56,9 @@ namespace TreasureHunterCore.Views
         public int NumActions
         {
             // Get the Numbe of Actions for this View
-            get { return _actions.Length; }
+            get { return _actions.Count; }
         }
 
-        public void InvokeAction(int actionIndex)
-        {
-            // Invoke the action specified by the index
-            if (actionIndex < 0 || actionIndex >= _actions.Length)
-            {
-                // Action Index is Out of Range
-                // Should Already be handled by Caller
-                return;
-            }
-            _actions[actionIndex].InvokeAction(this);
-            return;
-        }
 
         #endregion
 
@@ -81,10 +73,52 @@ namespace TreasureHunterCore.Views
             return;
         }
 
+        public static bool ChangeView(BaseView view)
+        {
+            // Access the View Manager + Request to Change view
+            if( TreasureHunterApp.GetInstance == null)
+            {
+                // Instance is null
+                //string message = "TreasureHunterApp instancs is null. Cannot change view";
+                return false;
+            }
+            bool success = TreasureHunterApp.GetInstance.ViewManager.SwitchToView(view);
+            return success;
+        }
+
+        public void InvokeAction(int actionIndex)
+        {
+            // Invoke the action specified by the index
+            if (actionIndex < 0 || actionIndex >= _actions.Count)
+            {
+                // Action Index is Out of Range
+                // Should Already be handled by Caller
+                return;
+            }
+            _actions[actionIndex].InvokeAction(this);
+            return;
+        }
 
         #endregion
 
         #region Protected Interface
+        protected virtual void InitHeader()
+        {
+            // Initialize the Header Text
+            return;
+        }
+
+        protected virtual void InitFooter()
+        {
+            // Initialize the Header Text
+            return;
+        }
+
+        protected virtual void InitActions()
+        {
+            // Register all possible actions with this view
+            return;
+        }
 
         protected struct TextActionPair
         {
@@ -116,27 +150,43 @@ namespace TreasureHunterCore.Views
             }
 
         }
-            
+
+        protected void AppendHeader(string text)
+        {
+            // Append a line to the header
+            _viewHeaderText.Add(text);
+            return;
+        }
+
+        protected void AppendFooter(string text)
+        {
+            // Append a line to the Footer
+            _viewFooterText.Append(text);
+            return;
+        }
+
+        protected void RegisterTextActionPair(TextActionPair textActionPair)
+        {
+            // Register a Text-Action Pair for this View
+            _actions.Add(textActionPair);
+            return;
+        }
 
         #endregion
 
         #region Private Interface
 
-        private void ClearConsole()
-        {
-            // Clear the Console
-            Console.Clear();
-            return;
-        }
-
         private void DisplayViewHeader()
         {
             // Show the Header for this View
-            string[] lines = new string[2];
-            lines[0] = new string('=', 64);
-            lines[1] = String.Format("{0:<8}{1}", "", _viewTitle);
-
-            foreach (string line in lines)
+            string[] defaultLines = new string[2];
+            defaultLines[0] = new string('=', 64);
+            defaultLines[1] = String.Format("{0:<8}{1}", "", _viewName);
+            foreach(string line in defaultLines)
+            {
+                Console.WriteLine(line);
+            }
+            foreach(string line in _viewHeaderText)
             {
                 Console.WriteLine(line);
             }
@@ -146,7 +196,7 @@ namespace TreasureHunterCore.Views
         private void DisplayActionText()
         {
             // Show the List of Actions for this View
-            for (int ii = 0; ii < _actions.Length; ii++)
+            for (int ii = 0; ii < _actions.Count; ii++)
             {
                 string text = String.Format("{0:<16}{1}", "", _actions[ii].Text);
                 Console.WriteLine(text);
@@ -157,11 +207,14 @@ namespace TreasureHunterCore.Views
         private void DisplayViewFooter()
         {
             // Show the Footer for this View
-            string[] lines = new string[2];
-            lines[0] = String.Format("{0:<8}{1}", "",_viewTitle);
-            lines[1] = new string('=', 64);
-
-            foreach (string line in lines)
+            string[] defaultLines = new string[2];
+            defaultLines[0] = String.Format("{0:<8}{1}", "", _viewName);
+            defaultLines[1] = new string('=', 64);
+            foreach (string line in _viewFooterText)
+            {
+                Console.WriteLine(line);
+            }
+            foreach (string line in defaultLines)
             {
                 Console.WriteLine(line);
             }
@@ -263,7 +316,8 @@ namespace TreasureHunterCore.Views
 
         private bool ValidateActionIndex(int actionIndex)
         {
-
+            // Confirm that the chosen action is valid
+            return false;
         }
 
         private void LogUserInputSpawnedErrorMessage(
@@ -279,8 +333,6 @@ namespace TreasureHunterCore.Views
             }
             return;
         }
-
-        private void LogInvalidUser
 
         #endregion
 

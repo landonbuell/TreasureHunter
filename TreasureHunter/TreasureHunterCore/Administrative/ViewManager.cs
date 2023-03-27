@@ -24,6 +24,7 @@ namespace TreasureHunterCore.Administrative
         // Governs the Currently Active View and Accepts User Input
         private static readonly string VIEW_MANAGER = "View Manager";
 
+        private bool _isLocked;
         private BaseView _currentView;
         
 
@@ -32,9 +33,8 @@ namespace TreasureHunterCore.Administrative
             base(app, VIEW_MANAGER)
         {
             // Constructor
-
-            _currentView = new StartupView();
-            
+            _isLocked = true;
+            _currentView = new StartupView();            
         }
 
         ~ViewManager()
@@ -43,31 +43,39 @@ namespace TreasureHunterCore.Administrative
             
         }
 
+
+        #region Getters and Setters
+
         public BaseView CurrentView
         {
             // Get or Set the Current View
             get { return _currentView; }
+            private set { _currentView = value; }
         }
 
-        public bool SwitchToView(BaseView newView)
+        public bool IsLocked
         {
-            // Switch to a new View if it is not Null
-            if (newView == null)
-            {
-                string message = "Not switching to null view";
-                App.LogMessage(message, TextLogger.LogLevel.WARNING);
-                return false;
-            }
-            else
-            {
-                string message = "Switching to new view";
-                App.LogMessage(message, TextLogger.LogLevel.INFO);
-                _currentView = newView;
-                return true;
-            }
+            // Return T/F If the instance is locked
+            get { return _isLocked; }
+            private set { _isLocked = value; }
         }
+
+        #endregion
 
         #region Public Interface
+
+        public static void ClearConsole()
+        {
+            // Clear the Console
+            Console.Clear();
+            return;
+        }
+
+        public bool SwitchToView(BaseView view)
+        {
+            // Switch to a new View if it is not Null
+            return SwitchToViewHelper(view);
+        }
 
         public void ShowCurrentView()
         {
@@ -96,6 +104,31 @@ namespace TreasureHunterCore.Administrative
         #endregion
 
         #region Private Interface
+
+        private bool SwitchToViewHelper(BaseView view)
+        {
+            // Helper to Change Views
+            if (IsLocked == true)
+            {
+                string message = String.Format("ViewManager: Cannot switch view to {0} while locked",
+                    view.ViewName);
+                App.LogMessage(message, TextLogger.LogLevel.WARNING);
+                return false;
+            }
+            if (view == null)
+            {
+                string message = "ViewManager: Not switching to null view";
+                App.LogMessage(message, TextLogger.LogLevel.WARNING);
+                return false;
+            }
+            else
+            {
+                string message = String.Format("ViewManager: switching to {0} view",view.ViewName);
+                App.LogMessage(message, TextLogger.LogLevel.INFO);
+                CurrentView = view;
+                return true;
+            }
+        }
 
         #endregion
     }

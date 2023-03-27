@@ -74,6 +74,18 @@ namespace TreasureHunterCore.Administrative
             get { return _status; }
         }
 
+        public AppSettings Settings
+        {
+            // Get the Current Settings
+            get { return _settings; }
+        }
+
+        public ViewManager ViewManager
+        {
+            // Get the view Manager
+            get { return _viewManager; }
+        }
+
         public bool BegunStartup
         {
             // Get or set if startup sequnece has begun
@@ -233,19 +245,18 @@ namespace TreasureHunterCore.Administrative
         private void DisplayStartupMessageToConsole()
         {
             // Show Startup Message to Console
-
-
+            StartupView startupView = new StartupView();
+            _viewManager.SwitchToView(startupView);
+            _viewManager.ShowCurrentView();
 
             return;
         }
 
-        private void LoadUserProfile()
+
+        private void Shutdown()
         {
-            // Select & Load A User Profile
-
-            return;
+            // Handle Shutdown Flag
         }
-
 
         private bool DeregisterSingleton()
         {
