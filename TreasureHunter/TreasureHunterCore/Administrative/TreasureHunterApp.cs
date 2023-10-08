@@ -219,14 +219,14 @@ namespace TreasureHunterCore.Administrative
             return;
         }
 
-        private bool UpdateStatus(AppStatus status)
+        private bool UpdateStatus(AppStatus newStatus)
         {
             // Update the app status to the "worse" of the new provided and the current
             AppStatus oldStatus = _status;
-            if (status > oldStatus)
+            if (newStatus > oldStatus)
             {
                 // Worse off
-                _status = status;
+                _status = newStatus;
                 return true;
             }
             return false;
@@ -245,10 +245,15 @@ namespace TreasureHunterCore.Administrative
         private void DisplayStartupMessageToConsole()
         {
             // Show Startup Message to Console
-            StartupView startupView = new StartupView();
+            ViewStartup startupView = new ViewStartup();
             _viewManager.SwitchToView(startupView);
             _viewManager.ShowCurrentView();
+            return;
+        }
 
+        private void LoadUserProfile()
+        {
+            // Logic to Load User Profile
             return;
         }
 

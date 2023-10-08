@@ -19,10 +19,10 @@ using TreasureHunterCore.Administrative;
 
 namespace TreasureHunterCore.Views
 {
-    internal class StartupView : BaseView
+    internal class ViewStartup : ViewBase
     {
 
-        internal StartupView() :
+        internal ViewStartup() :
             base("Startup Menu")
         {
             // Constructor

@@ -10,10 +10,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using TreasureHunterCore.Views;
 
@@ -25,7 +21,8 @@ namespace TreasureHunterCore.Administrative
         private static readonly string VIEW_MANAGER = "View Manager";
 
         private bool _isLocked;
-        private BaseView _currentView;
+        private ViewBase _currentView;
+        private Queue<ViewBase> _viewQueue;
         
 
         internal ViewManager(
@@ -34,7 +31,8 @@ namespace TreasureHunterCore.Administrative
         {
             // Constructor
             _isLocked = true;
-            _currentView = new StartupView();            
+            _currentView = new ViewStartup();            
+            _viewQueue = new Queue<ViewBase>();
         }
 
         ~ViewManager()
@@ -46,7 +44,7 @@ namespace TreasureHunterCore.Administrative
 
         #region Getters and Setters
 
-        public BaseView CurrentView
+        public ViewBase CurrentView
         {
             // Get or Set the Current View
             get { return _currentView; }
@@ -60,6 +58,7 @@ namespace TreasureHunterCore.Administrative
             private set { _isLocked = value; }
         }
 
+
         #endregion
 
         #region Public Interface
@@ -71,7 +70,7 @@ namespace TreasureHunterCore.Administrative
             return;
         }
 
-        public bool SwitchToView(BaseView view)
+        public bool SwitchToView(ViewBase view)
         {
             // Switch to a new View if it is not Null
             return SwitchToViewHelper(view);
@@ -82,6 +81,35 @@ namespace TreasureHunterCore.Administrative
             // Show the Current View to Console
             _currentView.ShowView();
             return;
+        }
+
+        public bool NextView()
+        {
+            // Move to the next view in the queue
+            if (_isLocked == true)
+            {
+                // It's locked, we can't move
+                return false;
+            }
+            if (_viewQueue.Count == 0)
+            {
+                // No New View Queued Up
+                return false;
+            }    
+            _currentView = _viewQueue.Dequeue();
+            return true;
+        }
+
+        public bool EnqueueView(ViewBase nextView)
+        {
+            // Add a non-null view to the view queue
+            if (nextView == null)
+            {
+                // Cannot enqueue a null view
+                return false;
+            }
+            _viewQueue.Enqueue(nextView);
+            return true;
         }
 
         public void ExecuteAction(int actionIndex)
@@ -105,7 +133,7 @@ namespace TreasureHunterCore.Administrative
 
         #region Private Interface
 
-        private bool SwitchToViewHelper(BaseView view)
+        private bool SwitchToViewHelper(ViewBase view)
         {
             // Helper to Change Views
             if (IsLocked == true)

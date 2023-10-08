@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace TreasureHunterCore.Views
 {
-    internal class PlaceholderView : BaseView
+    internal class PlaceholderView : ViewBase
     {
         internal PlaceholderView() :
             base("Placeholder View")

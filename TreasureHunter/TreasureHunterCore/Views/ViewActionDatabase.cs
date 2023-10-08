@@ -18,7 +18,7 @@ namespace TreasureHunterCore.Views
     internal static class ViewActionDatabase
     {
 
-        public static bool SendExitApplicationFlag(BaseView view)
+        public static bool SendExitApplicationFlag(ViewBase view)
         {
             // Send Flag to Exit Application
             if (TreasureHunterApp.GetInstance = null )
@@ -29,11 +29,11 @@ namespace TreasureHunterCore.Views
            
         }
 
-        public static bool ChangeToPlaceholderView(BaseView currentView)
+        public static bool ChangeToPlaceholderView(ViewBase currentView)
         {
             // Change to Placeholder view
             PlaceholderView placeholder = new PlaceholderView();
-            bool success = BaseView.ChangeView(placeholder);
+            bool success = ViewBase.ChangeView(placeholder);
             return success;
         }
 

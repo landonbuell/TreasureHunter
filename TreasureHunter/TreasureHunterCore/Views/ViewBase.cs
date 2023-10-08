@@ -16,15 +16,17 @@ using TreasureHunterCore.Administrative;
 
 namespace TreasureHunterCore.Views
 {
-    internal class BaseView
+    internal class ViewBase
     {
         // A View is a "menu" or "window" that Accepts User Input
+        // and can perform an action based on that input
+
         private string _viewName;
         private List<string> _viewHeaderText;
         private List<string> _viewFooterText;
         private List<TextActionPair> _actions;
 
-        protected BaseView(
+        protected ViewBase(
             string viewName)
         {
             // Constructor for BaseView
@@ -40,7 +42,7 @@ namespace TreasureHunterCore.Views
             InitActions();
         }
 
-        ~BaseView()
+        ~ViewBase()
         {
             // Destructor
         }
@@ -73,7 +75,7 @@ namespace TreasureHunterCore.Views
             return;
         }
 
-        public static bool ChangeView(BaseView view)
+        public static bool ChangeView(ViewBase view)
         {
             // Access the View Manager + Request to Change view
             if( TreasureHunterApp.GetInstance == null)
@@ -117,6 +119,9 @@ namespace TreasureHunterCore.Views
         protected virtual void InitActions()
         {
             // Register all possible actions with this view
+
+
+
             return;
         }
 
@@ -142,7 +147,7 @@ namespace TreasureHunterCore.Views
             }
 
             public void InvokeAction(
-                BaseView view)
+                ViewBase view)
             {
                 // Get the Action Delegate
                 _action.Invoke(view);
