@@ -24,17 +24,9 @@ namespace TreasureHunterCore
             TreasureHunterApp app = new TreasureHunterApp(settings);
             TreasureHunterApp.RegisterSingleton(app);
 
-            // Run the Startup
-            app.Startup();
-
-            // Run the Execution
-            app.Execute();
-
-            // Run the Shutdown
-            app.Cleanup();
-
-            // All Done
-
+            // Run + Exit
+            int exitStatus = app.Run();
+            return;
         }
     }
 }

@@ -26,6 +26,7 @@ namespace TreasureHunterCore.Administrative
         private TextLogger _logger;
 
         private AppStatus _status;
+        private bool _exitFlag;
 
         private ViewManager _viewManager;
 
@@ -46,7 +47,8 @@ namespace TreasureHunterCore.Administrative
             _settings = appSettings;
             _logger = new TextLogger(appSettings);
 
-            _status = AppStatus.UNKNOWN;
+            _status = AppStatus.SUCCESS;
+            _exitFlag = false; //force exit regardless of status?
 
             _viewManager = new ViewManager(this);
 
@@ -72,6 +74,13 @@ namespace TreasureHunterCore.Administrative
         {
             // Get the Current Status of the Application
             get { return _status; }
+            private set { _status = value; }
+        }
+
+        private bool ExitFlag
+        {
+            // Return the Exit Flag
+            get { return _exitFlag;}
         }
 
         public AppSettings Settings
@@ -141,50 +150,91 @@ namespace TreasureHunterCore.Administrative
             return;
         }
 
-        public void Startup()
+        public int Run()
+        {
+            // Run the App's execution
+            Startup();         
+            if (Status == 0 && ExitFlag == false)
+            {
+                Execute();
+            }
+            Cleanup();
+            return (int)Status;
+        }
+
+        internal bool UpdateStatus(AppStatus newStatus)
+        {
+            // Update the app status to the "worse" of the new provided and the current
+            AppStatus oldStatus = Status;
+            if (newStatus > oldStatus)
+            {
+                // Worse off
+                Status = newStatus;
+                if (Status == AppStatus.FAILURE)
+                {
+                    // App is in a Error state
+                    _exitFlag = true;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        #endregion
+
+        #region Private Interface
+
+        private void InitStatusFlags()
+        {
+            // Initialize Status Flags to False
+            for (int ii = 0; ii < _statusFlags.Length; ii++)
+            {
+                _statusFlags[ii] = false;
+            }
+            return;
+        }
+
+        private void Startup()
         {
             // Run App Startup Sequence
             BegunStartup = true;
+            LogMessage("Begining startup sequence ... ", TextLogger.LogLevel.INFO);
             EvaluateStartupCallbacks();
 
-            // Show Message To User + Load the Profile
-            DisplayStartupMessageToConsole();
-            LoadUserProfile();
+            // Create + Show the startup view
+            ViewStartup startupView = new ViewStartup();
+            ViewManager.SwitchToView(startupView);
+            ViewManager.ShowCurrentView();
 
+            // Perform Load + App Setup Process
+            PerformStartup();
 
-
+            LogMessage("Finished startup sequence ... ", TextLogger.LogLevel.INFO);
             FinishedStartup = true;
             return;
         }
 
-        public void Execute()
+        private void Execute()
         {
             // Run App Execution Squence
             BegunExecution = true;
             EvaluateExecuteCallbacks();
 
+            // Show Message To User + Load the Profile
 
             FinishedExecution = true;
             return;
         }
 
-        public void Cleanup()
+        private void Cleanup()
         {
             // Run App Cleanup Sequence
             BegunCleanup = true;
             EvaluateCleanupCallbacks();
 
-
-
             FinishedCleanup = true;
             return;
         }
-
-
-
-        #endregion
-
-        #region Private Interface
 
         private void EvaluateStartupCallbacks()
         {
@@ -219,48 +269,10 @@ namespace TreasureHunterCore.Administrative
             return;
         }
 
-        private bool UpdateStatus(AppStatus newStatus)
+        private void PerformStartup()
         {
-            // Update the app status to the "worse" of the new provided and the current
-            AppStatus oldStatus = _status;
-            if (newStatus > oldStatus)
-            {
-                // Worse off
-                _status = newStatus;
-                return true;
-            }
-            return false;
-        }
-
-        private void InitStatusFlags()
-        {
-            // Initialize Status Flags to False
-            for (int ii = 0; ii < _statusFlags.Length; ii++)
-            {
-                _statusFlags[ii] = false;   
-            }
+            // Perform the App startup sequence
             return;
-        }
-
-        private void DisplayStartupMessageToConsole()
-        {
-            // Show Startup Message to Console
-            ViewStartup startupView = new ViewStartup();
-            _viewManager.SwitchToView(startupView);
-            _viewManager.ShowCurrentView();
-            return;
-        }
-
-        private void LoadUserProfile()
-        {
-            // Logic to Load User Profile
-            return;
-        }
-
-
-        private void Shutdown()
-        {
-            // Handle Shutdown Flag
         }
 
         private bool DeregisterSingleton()
@@ -309,6 +321,5 @@ namespace TreasureHunterCore.Administrative
         }
 
         #endregion
-
     }
 }

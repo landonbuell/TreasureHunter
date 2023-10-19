@@ -21,9 +21,9 @@ namespace TreasureHunterCore.Views
         public static bool SendExitApplicationFlag(ViewBase view)
         {
             // Send Flag to Exit Application
-            if (TreasureHunterApp.GetInstance = null )
+            if (TreasureHunterApp.GetInstance == null )
             {
-                
+                // What to do if null????
             }
             return true;
            

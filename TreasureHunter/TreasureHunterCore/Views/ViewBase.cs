@@ -119,9 +119,6 @@ namespace TreasureHunterCore.Views
         protected virtual void InitActions()
         {
             // Register all possible actions with this view
-
-
-
             return;
         }
 

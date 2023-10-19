@@ -14,10 +14,9 @@ namespace TreasureHunterCore.Core
 
     public enum AppStatus
     {
-        UNKNOWN = 0,
-        SUCCESS = 1,
-        WARNING = 2,
-        FAILURE = 3
+        SUCCESS = 0,
+        WARNING = 1,
+        FAILURE = 2
     }
 
     public enum DifficultyLevel
@@ -45,10 +44,10 @@ namespace TreasureHunterCore.Core
 
     public enum PlayerClass
     {
-        NONE    = 0,
-        WARRIOR = 1,
-        THEIF   = 2,
-        MAGE    = 3
+        NONE        = 0,
+        SPACEMAN    = 1,
+        SMUGGLER    = 2,
+        SCHOLAR     = 3
     }
 
 
