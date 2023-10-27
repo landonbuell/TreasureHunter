@@ -45,9 +45,9 @@ namespace TreasureHunterCore.Core
     public enum PlayerClass
     {
         NONE        = 0,
-        SPACEMAN    = 1,
+        RANGER      = 1,
         SMUGGLER    = 2,
-        SCHOLAR     = 3
+        WIZARD      = 3
     }
 
 

@@ -26,12 +26,13 @@ namespace TreasureHunterCore.Administrative
 
         private BuildInfo _buildInfo;
         private bool _isDebugMode;
+        private bool _clearConsole;
 
-        public AppSettings()
+        public AppSettings(string outputPath)
         {
             // Constructor
             _pathStartup = Directory.GetCurrentDirectory();
-            _pathOutput = Path.Combine(_pathStartup, "..", "..", "outputLog");
+            _pathOutput = Path.GetFullPath(outputPath);
 
             _logLevel = TextLogger.LogLevel.MESSAGE;
             _logToFile = true;
@@ -39,6 +40,13 @@ namespace TreasureHunterCore.Administrative
 
             _buildInfo = new BuildInfo(0,0,0);
             _isDebugMode = true;
+            _clearConsole = false;
+
+            if (Directory.Exists(outputPath) == false)
+            {
+                Directory.CreateDirectory(outputPath);
+            }
+
         }
 
         #region Getters and Setters
@@ -81,13 +89,25 @@ namespace TreasureHunterCore.Administrative
         public bool IsDebugMode
         {
             // Get T/F If app is in Debug Mode
-            get { return IsDebugMode; }
+            get { return _isDebugMode; }
+        }
+
+        public bool ClearConsole
+        {
+            // Get T/F if we should clear the console between views
+            get { return _clearConsole; }
         }
 
 
         #endregion
 
         #region Public Interface
+
+        public static AppSettings DevelopmentSettings()
+        {
+            string outputPath = @"C:\Users\lando\Documents\GitHub\TreasureHunter\GameLogs\sessionAlpha";
+            return new AppSettings(outputPath);
+        }
 
         #endregion
 

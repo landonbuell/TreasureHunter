@@ -19,10 +19,10 @@ namespace TreasureHunterCore.Administrative
     {
         // Governs the Currently Active View and Accepts User Input
         private static readonly string VIEW_MANAGER = "View Manager";
+        private static readonly int QUEUE_CAPACITY = 16;
 
-        private bool _isLocked;
-        private ViewBase _currentView;
         private Queue<ViewBase> _viewQueue;
+        private int[] _viewCounters;
         
 
         internal ViewManager(
@@ -30,34 +30,37 @@ namespace TreasureHunterCore.Administrative
             base(app, VIEW_MANAGER)
         {
             // Constructor
-            _isLocked = true;
-            _currentView = new ViewStartup();            
-            _viewQueue = new Queue<ViewBase>();
+            _viewQueue = new Queue<ViewBase>(QUEUE_CAPACITY);
+            _viewCounters = new int[2];
         }
 
         ~ViewManager()
         {
             // Destructor
-            
+            _viewQueue.Clear();
         }
-
 
         #region Getters and Setters
 
         public ViewBase CurrentView
         {
             // Get or Set the Current View
-            get { return _currentView; }
-            private set { _currentView = value; }
+            get{ return _viewQueue.Peek(); }
         }
 
-        public bool IsLocked
+        public int ViewsShown
         {
-            // Return T/F If the instance is locked
-            get { return _isLocked; }
-            private set { _isLocked = value; }
+            // Get the number of views shown
+            get { return _viewCounters[0]; }
+            private set { _viewCounters[0] = value; }
         }
 
+        public int ViewsQueued
+        {
+            // Get the number of views queued
+            get { return _viewCounters[1]; }
+            private set { _viewCounters[1] = value; }
+        }
 
         #endregion
 
@@ -70,34 +73,16 @@ namespace TreasureHunterCore.Administrative
             return;
         }
 
-        public bool SwitchToView(ViewBase view)
-        {
-            // Switch to a new View if it is not Null
-            return SwitchToViewHelper(view);
-        }
-
         public void ShowCurrentView()
         {
             // Show the Current View to Console
-            _currentView.ShowView();
-            return;
-        }
-
-        public bool NextView()
-        {
-            // Move to the next view in the queue
-            if (_isLocked == true)
+            if (App.Settings.ClearConsole == true)
             {
-                // It's locked, we can't move
-                return false;
+                ClearConsole();
             }
-            if (_viewQueue.Count == 0)
-            {
-                // No New View Queued Up
-                return false;
-            }    
-            _currentView = _viewQueue.Dequeue();
-            return true;
+            CurrentView.Show();
+            ViewsShown += 1;
+            return;
         }
 
         public bool EnqueueView(ViewBase nextView)
@@ -109,54 +94,30 @@ namespace TreasureHunterCore.Administrative
                 return false;
             }
             _viewQueue.Enqueue(nextView);
+            ViewsQueued += 1;
             return true;
         }
 
-        public void ExecuteAction(int actionIndex)
+        public void DequeueView()
         {
-            // Execute the Action Prescribed by the Index
-            if (actionIndex < 0 || actionIndex >= _currentView.NumActions)
+            // Remove View from the View Queue
+            if (_viewQueue.Count > 0)
             {
-                // Action Index is Out of Range
-                string message = String.Format(
-                    "Action Index {0} is out of range for view {1} w/ {2} possible actions",
-                    actionIndex, _currentView.ViewName, _currentView.NumActions);
-                App.LogMessage(message, TextLogger.LogLevel.WARNING);
-                return;
+                // Dequeue the view if there is something
+                _viewQueue.Dequeue();
             }
-            // Execute the Action
-            _currentView.InvokeAction(actionIndex);
+            if (_viewQueue.Count == 0)
+            {
+                // Queue is Empty, just add a placeholder
+                _viewQueue.Enqueue(new PlaceholderView());
+            }
             return;
         }
+
 
         #endregion
 
         #region Private Interface
-
-        private bool SwitchToViewHelper(ViewBase view)
-        {
-            // Helper to Change Views
-            if (IsLocked == true)
-            {
-                string message = String.Format("ViewManager: Cannot switch view to {0} while locked",
-                    view.ViewName);
-                App.LogMessage(message, TextLogger.LogLevel.WARNING);
-                return false;
-            }
-            if (view == null)
-            {
-                string message = "ViewManager: Not switching to null view";
-                App.LogMessage(message, TextLogger.LogLevel.WARNING);
-                return false;
-            }
-            else
-            {
-                string message = String.Format("ViewManager: switching to {0} view",view.ViewName);
-                App.LogMessage(message, TextLogger.LogLevel.INFO);
-                CurrentView = view;
-                return true;
-            }
-        }
 
         #endregion
     }

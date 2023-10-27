@@ -17,8 +17,8 @@ namespace TreasureHunterCore.Views
     internal class ViewStartup : ViewBase
     {
 
-        internal ViewStartup() :
-            base("Startup Menu")
+        internal ViewStartup(TreasureHunterApp app) :
+            base("Startup Menu",app)
         {
             // Constructor
         }
@@ -28,7 +28,7 @@ namespace TreasureHunterCore.Views
         protected override void InitHeader()
         {
             // Init the View's Header
-            string buildID = TreasureHunterApp.GetInstance.Settings.BuildID;
+            string buildID = App.Settings.BuildID;
             string welcome = string.Format("Welcome to the Treasure Hunter App: {0}", buildID);
             string instructions = "On any view, enter a number and press ENTER to invoke the corresponding action";
 

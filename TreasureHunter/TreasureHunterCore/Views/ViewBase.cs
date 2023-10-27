@@ -22,15 +22,18 @@ namespace TreasureHunterCore.Views
         // and can perform an action based on that input
 
         private string _viewName;
+        private readonly TreasureHunterApp _app; 
         private List<string> _viewHeaderText;
         private List<string> _viewFooterText;
         private List<TextActionPair> _actions;
 
-        protected ViewBase(
-            string viewName)
+        protected ViewBase(         
+            string viewName,
+            TreasureHunterApp app)
         {
             // Constructor for BaseView
             _viewName = viewName;
+            _app = app;
 
             _viewHeaderText = new List<string>();
             _viewFooterText = new List<string>();
@@ -55,6 +58,12 @@ namespace TreasureHunterCore.Views
             get { return _viewName; }
         }
 
+        protected TreasureHunterApp App
+        {
+            // Get a reference to the parent App
+            get { return _app; }
+        }
+
         public int NumActions
         {
             // Get the Numbe of Actions for this View
@@ -66,26 +75,13 @@ namespace TreasureHunterCore.Views
 
         #region Public Interface
 
-        public void ShowView()
+        public void Show()
         {
             // Print this View To Console
             DisplayViewHeader();
             DisplayActionText();
             DisplayViewFooter();
             return;
-        }
-
-        public static bool ChangeView(ViewBase view)
-        {
-            // Access the View Manager + Request to Change view
-            if( TreasureHunterApp.GetInstance == null)
-            {
-                // Instance is null
-                //string message = "TreasureHunterApp instancs is null. Cannot change view";
-                return false;
-            }
-            bool success = TreasureHunterApp.GetInstance.ViewManager.SwitchToView(view);
-            return success;
         }
 
         public void InvokeAction(int actionIndex)
@@ -97,7 +93,7 @@ namespace TreasureHunterCore.Views
                 // Should Already be handled by Caller
                 return;
             }
-            _actions[actionIndex].InvokeAction(this);
+            _actions[actionIndex].InvokeAction();
             return;
         }
 
@@ -143,11 +139,10 @@ namespace TreasureHunterCore.Views
                 get { return _text;}
             }
 
-            public void InvokeAction(
-                ViewBase view)
+            public void InvokeAction()
             {
                 // Get the Action Delegate
-                _action.Invoke(view);
+                _action.Invoke();
                 return;
             }
 
@@ -176,19 +171,58 @@ namespace TreasureHunterCore.Views
 
         #endregion
 
+        #region Actions
+
+        protected bool SendExitFlagToApplication()
+        {
+            // Raise the exit flag on the Main Application
+            App.ExitFlag = true;
+            return true;
+        }
+
+        #endregion
+
         #region Private Interface
+
+        private void DisplayTopBorder()
+        {
+            // Print out a border for the top of the view
+            string[] topBorder = new string[2];
+            topBorder[0] = new string('=', 64);
+            if (App.Settings.IsDebugMode == true)
+            {
+                topBorder[1] = string.Format("{0:-8}{1}{2}", " ", "Debug: ", _viewName);
+            }
+            // Print Out
+            foreach (string line in topBorder)
+            {
+                Console.WriteLine(line);
+            }
+            return;
+        }
+
+        private void DisplayBottomBorder()
+        {
+            // Print out a border for the bottom of the view
+            string[] bottomBorder = new string[2];           
+            if (App.Settings.IsDebugMode == true)
+            {
+                bottomBorder[0] = string.Format("{0:-8}{1}{2}", " ", "Debug: ", _viewName);
+            }
+            bottomBorder[1] = new string('=', 64);
+            // Print Out
+            foreach (string line in bottomBorder)
+            {
+                Console.WriteLine(line);
+            }
+            return;
+        }
 
         private void DisplayViewHeader()
         {
             // Show the Header for this View
-            string[] defaultLines = new string[2];
-            defaultLines[0] = new string('=', 64);
-            defaultLines[1] = String.Format("{0:<8}{1}", "", _viewName);
-            foreach(string line in defaultLines)
-            {
-                Console.WriteLine(line);
-            }
-            foreach(string line in _viewHeaderText)
+            DisplayTopBorder();
+            foreach (string line in _viewHeaderText)
             {
                 Console.WriteLine(line);
             }
@@ -209,17 +243,11 @@ namespace TreasureHunterCore.Views
         private void DisplayViewFooter()
         {
             // Show the Footer for this View
-            string[] defaultLines = new string[2];
-            defaultLines[0] = String.Format("{0:<8}{1}", "", _viewName);
-            defaultLines[1] = new string('=', 64);
             foreach (string line in _viewFooterText)
             {
                 Console.WriteLine(line);
             }
-            foreach (string line in defaultLines)
-            {
-                Console.WriteLine(line);
-            }
+            DisplayBottomBorder();
             return;
         }
 
@@ -326,19 +354,23 @@ namespace TreasureHunterCore.Views
             string? userInput, string errorMessage)
         {
             // Log a Falure Message caused by the user Input
-            TreasureHunterApp? app = TreasureHunterApp.GetInstance;
-            if (app != null)
-            {
-                string message = String.Format("User input: {0}, spawned error: {1}",
-                    userInput, errorMessage);
-                app.LogMessage(message, TextLogger.LogLevel.ERROR);
-            }
+            string message = String.Format("User input: {0}, spawned error: {1}",
+                userInput, errorMessage);
+            App.LogMessage(message, TextLogger.LogLevel.ERROR);
             return;
         }
 
         #endregion
 
+        #region Static Interface
 
+        public static bool NullAction()
+        {
+            // View action that dows nothing
+            return true;
+        }
+
+        #endregion
 
 
     }

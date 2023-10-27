@@ -106,7 +106,7 @@ namespace TreasureHunterCore.Administrative
             {
                 // Cast Message to String
                 string msg = string.Format("{0:-32}{1:-32}{2}",
-                    timeStamp,message,logLevel);
+                    timeStamp, logLevel, message);
                 return msg;
             }
 
@@ -123,6 +123,7 @@ namespace TreasureHunterCore.Administrative
             if (_logToFile == true)
             {
                 _outStream.WriteLine(message.ToString());
+                _outStream.Close();
             }
             return;
         }
