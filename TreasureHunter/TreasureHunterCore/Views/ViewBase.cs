@@ -21,7 +21,7 @@ namespace TreasureHunterCore.Views
         // A View is a "menu" or "window" that Accepts User Input
         // and can perform an action based on that input
 
-        private string _viewName;
+        private readonly string _viewName;
         private readonly TreasureHunterApp _app; 
         private List<string> _viewHeaderText;
         private List<string> _viewFooterText;

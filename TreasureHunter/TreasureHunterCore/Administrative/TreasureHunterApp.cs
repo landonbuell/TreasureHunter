@@ -20,7 +20,6 @@ namespace TreasureHunterCore.Administrative
     internal class TreasureHunterApp
     {
         // Represents Main Treasure Hunter Game
-        private static TreasureHunterApp? _instance = null;
 
         private AppSettings _settings;
         private TextLogger _logger;
@@ -49,6 +48,7 @@ namespace TreasureHunterCore.Administrative
             _exitFlag = false; //force exit regardless of status?
 
             _viewManager = new ViewManager(this);
+            _queryManager = new QueryManager(this);
 
             _statusFlags = new bool[6];
             _callbacksStartup = new List<PresequenceCallback>();

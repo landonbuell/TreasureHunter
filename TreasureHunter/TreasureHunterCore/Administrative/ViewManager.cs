@@ -24,7 +24,6 @@ namespace TreasureHunterCore.Administrative
         private Queue<ViewBase> _viewQueue;
         private int[] _viewCounters;
         
-
         internal ViewManager(
             TreasureHunterApp app) :
             base(app, VIEW_MANAGER)
@@ -109,7 +108,7 @@ namespace TreasureHunterCore.Administrative
             if (_viewQueue.Count == 0)
             {
                 // Queue is Empty, just add a placeholder
-                _viewQueue.Enqueue(new PlaceholderView());
+                _viewQueue.Enqueue(new PlaceholderView(App));
             }
             return;
         }

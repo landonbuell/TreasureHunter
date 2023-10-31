@@ -9,18 +9,15 @@
  * Date:            Feb 2023 
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TreasureHunterCore.Administrative;
 
 namespace TreasureHunterCore.Views
 {
     internal class PlaceholderView : ViewBase
     {
-        internal PlaceholderView() :
-            base("Placeholder View")
+        internal PlaceholderView(
+            TreasureHunterApp app) :
+            base("Placeholder View",app)
         {
             // Constructor
         }
