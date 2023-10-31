@@ -7,9 +7,9 @@ C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore
 C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\bin\Debug\net6.0\TreasureHunterCore.deps.json
 C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\bin\Debug\net6.0\TreasureHunterCore.runtimeconfig.json
 C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\bin\Debug\net6.0\TreasureHunterCore.dll
-C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\bin\Debug\net6.0\ref\TreasureHunterCore.dll
 C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\bin\Debug\net6.0\TreasureHunterCore.pdb
 C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\obj\Debug\net6.0\TreasureHunterCore.dll
 C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\obj\Debug\net6.0\ref\TreasureHunterCore.dll
 C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\obj\Debug\net6.0\TreasureHunterCore.pdb
 C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\obj\Debug\net6.0\TreasureHunterCore.genruntimeconfig.cache
+C:\Users\lando\Documents\GitHub\TreasureHunter\TreasureHunter\TreasureHunterCore\obj\Debug\net6.0\refint\TreasureHunterCore.dll
