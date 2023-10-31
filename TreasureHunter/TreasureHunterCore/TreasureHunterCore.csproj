@@ -8,8 +8,4 @@
     <StartupObject>TreasureHunterCore.TreaureHunterMain</StartupObject>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Gameboard\" />
-  </ItemGroup>
-
 </Project>

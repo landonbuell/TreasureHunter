@@ -158,7 +158,7 @@ namespace TreasureHunterCore.Administrative
         {
             // Default User Profile Alpha for Developmen
             UserProfile alpha = new UserProfile(
-                "Alpha", PlayerClass.WARRIOR, DifficultyLevel.MEDIUM);
+                "Alpha", PlayerClass.RANGER, DifficultyLevel.MEDIUM);
             return alpha;
         }
 

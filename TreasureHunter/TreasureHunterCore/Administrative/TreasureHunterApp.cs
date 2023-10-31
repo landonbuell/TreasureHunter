@@ -13,16 +13,22 @@ using System.IO;
 using System.Text;
 
 using TreasureHunterCore.Core;
+using TreasureHunterCore.Views;
 
 namespace TreasureHunterCore.Administrative
 {
     internal class TreasureHunterApp
     {
         // Represents Main Treasure Hunter Game
-        private static TreasureHunterApp? _instance = null;
 
         private AppSettings _settings;
+        private TextLogger _logger;
+
         private AppStatus _status;
+        private bool _exitFlag;
+
+        private ViewManager _viewManager;
+        private QueryManager _queryManager;
 
         private bool[] _statusFlags;
         private List<PresequenceCallback> _callbacksStartup;
@@ -31,15 +37,18 @@ namespace TreasureHunterCore.Administrative
 
         private UserProfile _userProfile;
 
-
-
-
         internal TreasureHunterApp(
             AppSettings appSettings)
         {
             // Constructor
             _settings = appSettings;
-            _status = AppStatus.UNKNOWN;
+            _logger = new TextLogger(appSettings);
+
+            _status = AppStatus.SUCCESS;
+            _exitFlag = false; //force exit regardless of status?
+
+            _viewManager = new ViewManager(this);
+            _queryManager = new QueryManager(this);
 
             _statusFlags = new bool[6];
             _callbacksStartup = new List<PresequenceCallback>();
@@ -54,7 +63,6 @@ namespace TreasureHunterCore.Administrative
         ~TreasureHunterApp()
         {
             // Destructor
-            DeregisterSingleton();
         }
 
         #region Getters and Setters
@@ -63,6 +71,26 @@ namespace TreasureHunterCore.Administrative
         {
             // Get the Current Status of the Application
             get { return _status; }
+            private set { _status = value; }
+        }
+
+        public bool ExitFlag
+        {
+            // Return the Exit Flag
+            get { return _exitFlag;}
+            set { _exitFlag = value; }
+        }
+
+        public AppSettings Settings
+        {
+            // Get the Current Settings
+            get { return _settings; }
+        }
+
+        public ViewManager ViewManager
+        {
+            // Get the view Manager
+            get { return _viewManager; }
         }
 
         public bool BegunStartup
@@ -111,51 +139,104 @@ namespace TreasureHunterCore.Administrative
 
         #region Public Interface
 
-
-        public void Startup()
+        public void LogMessage(
+            string message,
+            TextLogger.LogLevel logLevel)
         {
-            // Run App Startup Sequence
-            BegunStartup = true;
-            EvaluateStartupCallbacks();
-
-            // Show Message To User + Load the Profile
-            DisplayStartupMessageToConsole();
-            LoadUserProfile();
-
-
-
-            FinishedStartup = true;
+            // Log a Message
+            _logger.LogMessage(message, logLevel);
             return;
         }
 
-        public void Execute()
+        public int Run()
         {
-            // Run App Execution Squence
-            BegunExecution = true;
-            EvaluateExecuteCallbacks();
-
-
-            FinishedExecution = true;
-            return;
+            // Run the App's execution
+            Startup();         
+            if (Status == 0 && ExitFlag == false)
+            {
+                Execute();
+            }
+            Shutdown();
+            return (int)Status;
         }
 
-        public void Cleanup()
+        internal bool UpdateStatus(AppStatus newStatus)
         {
-            // Run App Cleanup Sequence
-            BegunCleanup = true;
-            EvaluateCleanupCallbacks();
-
-
-
-            FinishedCleanup = true;
-            return;
+            // Update the app status to the "worse" of the new provided and the current
+            AppStatus oldStatus = Status;
+            if (newStatus > oldStatus)
+            {
+                // Worse off
+                Status = newStatus;
+                if (Status == AppStatus.FAILURE)
+                {
+                    // App is in a Error state
+                    _exitFlag = true;
+                }
+                return true;
+            }
+            return false;
         }
-
-
 
         #endregion
 
         #region Private Interface
+
+        private void InitStatusFlags()
+        {
+            // Initialize Status Flags to False
+            for (int ii = 0; ii < _statusFlags.Length; ii++)
+            {
+                _statusFlags[ii] = false;
+            }
+            return;
+        }
+
+        private void Startup()
+        {
+            // Run App Startup Sequence
+            BegunStartup = true;
+            LogMessage("Begining startup sequence ... ", TextLogger.LogLevel.INFO);
+            ViewManager.EnqueueView(new ViewStartup(this));
+            ViewManager.ShowCurrentView();
+
+            // Perform Load + App Setup Process
+            PerformStartup();
+
+            // Queue the Execute view and remove the startup one
+            ViewManager.EnqueueView(new ViewExecute(this));
+            ViewManager.DequeueView();
+
+            LogMessage("Finished startup sequence ... ", TextLogger.LogLevel.INFO);
+            FinishedStartup = true;
+            return;
+        }
+
+        private void Execute()
+        {
+            // Run App Execution Squence
+            BegunExecution = true;
+            LogMessage("Begining execution sequence ... ", TextLogger.LogLevel.INFO);
+
+
+            LogMessage("Finished cleanup sequence ... ", TextLogger.LogLevel.INFO);
+            FinishedExecution = true;
+            return;
+        }
+
+        private void Shutdown()
+        {
+            // Run App Cleanup Sequence
+            BegunCleanup = true;
+            LogMessage("Begining cleanup sequence ... ", TextLogger.LogLevel.INFO);
+            
+            // Perform Load + App Setup Process
+            PerformShutdown();
+
+            LogMessage("Finished cleanup sequence ... ", TextLogger.LogLevel.INFO);
+            FinishedCleanup = true;
+            return;
+        }
 
         private void EvaluateStartupCallbacks()
         {
@@ -179,7 +260,7 @@ namespace TreasureHunterCore.Administrative
             return;
         }
 
-        private void EvaluateCleanupCallbacks()
+        private void EvaluateShutdownCallbacks()
         {
             // Evaluate all startup callbacks
             foreach (PresequenceCallback item in _callbacksCleanup)
@@ -190,92 +271,22 @@ namespace TreasureHunterCore.Administrative
             return;
         }
 
-        private bool UpdateStatus(AppStatus status)
+        private void PerformStartup()
         {
-            // Update the app status to the "worse" of the new provided and the current
-            AppStatus oldStatus = _status;
-            if (status > oldStatus)
-            {
-                // Worse off
-                _status = status;
-                return true;
-            }
-            return false;
-        }
-
-        private void InitStatusFlags()
-        {
-            // Initialize Status Flags to False
-            for (int ii = 0; ii < _statusFlags.Length; ii++)
-            {
-                _statusFlags[ii] = false;   
-            }
+            // Perform the App startup sequence
+            EvaluateStartupCallbacks();
             return;
         }
 
-        private void DisplayStartupMessageToConsole()
+        private void PerformShutdown()
         {
-            // Show Startup Message to Console
-
-
-
+            // Perform the App startup sequence
+            EvaluateShutdownCallbacks();
             return;
-        }
-
-        private void LoadUserProfile()
-        {
-            // Select & Load A User Profile
-
-            return;
-        }
-
-
-        private bool DeregisterSingleton()
-        {
-            // Deregister this instance is the "Singleton" if applicable
-            if (_instance != null)
-            {
-                if (_instance == this)
-                {
-                    _instance = null;
-                    return true;
-                }
-            }
-            return false;
         }
 
         #endregion
 
-        #region Static Interface
-
-        internal static bool RegisterSingleton(TreasureHunterApp app)
-        {
-            // Register provided instance as the "Singleton" instance
-            if (app == null)
-            {
-                // Got null instance?
-                return false;
-            }
-            if (_instance == null)
-            {
-                // Successfuly Registered app
-                _instance = app;
-                return true;
-            }
-            else
-            {
-                // Singleton Already Exists
-                return false;
-            }
-        }
-
-        internal static TreasureHunterApp? GetInstance
-        {
-            // Return previously registered Singleton Instance
-            get { return _instance; }
-        }
-
-        #endregion
 
     }
 }
