@@ -31,8 +31,14 @@ namespace TreasureHunterCore.Views
 
             // Option 0 - Send a safe-exit flag
             RegisterTextActionPair(new TextActionPair("EXIT",       SendExitFlagToApplication));
+
+            // Option 1 - View Available Profiles
             RegisterTextActionPair(new TextActionPair("PROFILES",   SelectProfileToLoad));
+
+            // Option 2 - View Settings
             RegisterTextActionPair(new TextActionPair("SETTINGS",   ModifySettings));
+
+            // Option 3 - See Credits
             RegisterTextActionPair(new TextActionPair("CREDITS",    ShowCredits));
             return;
         }

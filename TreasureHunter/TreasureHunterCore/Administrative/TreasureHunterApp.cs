@@ -43,7 +43,6 @@ namespace TreasureHunterCore.Administrative
             _viewManager = new ViewManager(this);
             _queryManager = new QueryManager(this);
 
-
             InitStatusFlags();
         }
 
