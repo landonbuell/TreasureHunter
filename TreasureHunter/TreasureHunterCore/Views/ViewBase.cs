@@ -20,6 +20,9 @@ namespace TreasureHunterCore.Views
     {
         // A View is a "menu" or "window" that Accepts User Input
         // and can perform an action based on that input
+        private static readonly string SPACE_04_CHARS = new(' ', 4);
+        private static readonly string SPACE_08_CHARS = new(' ', 8);
+        private static readonly string SPACE_16_CHARS = new(' ', 16);
 
         private readonly string _viewName;
         private readonly TreasureHunterApp _app; 
@@ -75,7 +78,7 @@ namespace TreasureHunterCore.Views
 
         #region Public Interface
 
-        public void Show()
+        public void Draw()
         {
             // Print this View To Console
             DisplayViewHeader();
@@ -184,6 +187,42 @@ namespace TreasureHunterCore.Views
 
         #region Private Interface
 
+        private void DisplayViewHeader()
+        {
+            // Show the Header for this View
+            DisplayTopBorder();
+            foreach (string line in _viewHeaderText)
+            {
+                Console.Write(SPACE_08_CHARS);
+                Console.WriteLine(line);
+            }
+            return;
+        }
+
+        private void DisplayActionText()
+        {
+            // Show the List of Actions for this View
+            for (int ii = 0; ii < _actions.Count; ii++)
+            {
+                string text = string.Format("{0,-8}{1}",ii, _actions[ii].Text);
+                Console.Write(SPACE_16_CHARS);
+                Console.WriteLine(text);
+            }
+            return;
+        }
+
+        private void DisplayViewFooter()
+        {
+            // Show the Footer for this View
+            foreach (string line in _viewFooterText)
+            {
+                Console.Write(SPACE_08_CHARS);
+                Console.WriteLine(line);
+            }
+            DisplayBottomBorder();
+            return;
+        }
+
         private void DisplayTopBorder()
         {
             // Print out a border for the top of the view
@@ -191,7 +230,7 @@ namespace TreasureHunterCore.Views
             topBorder[0] = new string('=', 64);
             if (App.Settings.IsDebugMode == true)
             {
-                topBorder[1] = string.Format("{0:-8}{1}{2}", " ", "Debug: ", _viewName);
+                topBorder[1] = string.Format("{0}{1}", "Debug: ", _viewName);
             }
             // Print Out
             foreach (string line in topBorder)
@@ -204,10 +243,10 @@ namespace TreasureHunterCore.Views
         private void DisplayBottomBorder()
         {
             // Print out a border for the bottom of the view
-            string[] bottomBorder = new string[2];           
+            string[] bottomBorder = new string[2];
             if (App.Settings.IsDebugMode == true)
             {
-                bottomBorder[0] = string.Format("{0:-8}{1}{2}", " ", "Debug: ", _viewName);
+                bottomBorder[0] = string.Format("{0}{1}", "Debug: ", _viewName);
             }
             bottomBorder[1] = new string('=', 64);
             // Print Out
@@ -216,70 +255,6 @@ namespace TreasureHunterCore.Views
                 Console.WriteLine(line);
             }
             return;
-        }
-
-        private void DisplayViewHeader()
-        {
-            // Show the Header for this View
-            DisplayTopBorder();
-            foreach (string line in _viewHeaderText)
-            {
-                Console.WriteLine(line);
-            }
-            return;
-        }
-
-        private void DisplayActionText()
-        {
-            // Show the List of Actions for this View
-            for (int ii = 0; ii < _actions.Count; ii++)
-            {
-                string text = String.Format("{0:<16}{1}", "", _actions[ii].Text);
-                Console.WriteLine(text);
-            }
-            return;
-        }
-
-        private void DisplayViewFooter()
-        {
-            // Show the Footer for this View
-            foreach (string line in _viewFooterText)
-            {
-                Console.WriteLine(line);
-            }
-            DisplayBottomBorder();
-            return;
-        }
-
-        private void AcceptUserInput()
-        {
-            // Accept + Parse User Input
-            bool acceptInput = true;
-            bool validUserInput = true;
-            string consoleMessage = String.Format("{0:<4}{1}: ", "", "Action"); 
-            string? userInput = null;
-
-            int actionIndex = -1;
-            while (acceptInput == true)
-            {
-                validUserInput = true;
-                actionIndex = -1;
-
-                Console.Write(consoleMessage);            
-                validUserInput = ReadConsoleInput(ref userInput);
-
-                if (validUserInput == false)
-                {
-                    // Skip this Input because it spawned an error
-                    continue;
-                }
-
-                // Parse the String for the action Index
-                actionIndex = DetermineActionIndex(ref userInput);
-                
-
-
-            }
         }
 
         private bool ReadConsoleInput(ref string? userInput)
@@ -321,33 +296,6 @@ namespace TreasureHunterCore.Views
             }
             userInput = userInput.Trim();
             return true;
-        }
-
-        private int DetermineActionIndex(ref string userInput)
-        {
-            // Cast to UINT32 and check if it's in bounds
-            int actionIndex = -1;
-            try
-            {
-                actionIndex = Convert.ToInt32(userInput);
-            }
-            catch (FormatException err)
-            {
-                LogUserInputSpawnedErrorMessage(userInput, err.Message);
-                actionIndex = -1;
-            }
-            catch(OverflowException err)
-            {
-                LogUserInputSpawnedErrorMessage(userInput, err.Message);
-                actionIndex = -1;
-            }
-            return actionIndex;
-        }
-
-        private bool ValidateActionIndex(int actionIndex)
-        {
-            // Confirm that the chosen action is valid
-            return false;
         }
 
         private void LogUserInputSpawnedErrorMessage(

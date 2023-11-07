@@ -25,17 +25,10 @@ namespace TreasureHunterCore.Administrative
         private TextLogger _logger;
 
         private AppStatus _status;
-        private bool _exitFlag;
+        private bool[] _statusFlags;
 
         private ViewManager _viewManager;
         private QueryManager _queryManager;
-
-        private bool[] _statusFlags;
-        private List<PresequenceCallback> _callbacksStartup;
-        private List<PresequenceCallback> _callbacksExecute;
-        private List<PresequenceCallback> _callbacksCleanup;
-
-        private UserProfile _userProfile;
 
         internal TreasureHunterApp(
             AppSettings appSettings)
@@ -45,17 +38,11 @@ namespace TreasureHunterCore.Administrative
             _logger = new TextLogger(appSettings);
 
             _status = AppStatus.SUCCESS;
-            _exitFlag = false; //force exit regardless of status?
+            _statusFlags = new bool[7];
 
             _viewManager = new ViewManager(this);
             _queryManager = new QueryManager(this);
 
-            _statusFlags = new bool[6];
-            _callbacksStartup = new List<PresequenceCallback>();
-            _callbacksExecute = new List<PresequenceCallback>();
-            _callbacksCleanup = new List<PresequenceCallback>();
-
-            _userProfile = UserProfile.NullUserProfile();
 
             InitStatusFlags();
         }
@@ -77,8 +64,8 @@ namespace TreasureHunterCore.Administrative
         public bool ExitFlag
         {
             // Return the Exit Flag
-            get { return _exitFlag;}
-            set { _exitFlag = value; }
+            get { return _statusFlags[6]; }
+            set { _statusFlags[6] = value; }
         }
 
         public AppSettings Settings
@@ -87,10 +74,16 @@ namespace TreasureHunterCore.Administrative
             get { return _settings; }
         }
 
-        public ViewManager ViewManager
+        private ViewManager ViewManager
         {
             // Get the view Manager
             get { return _viewManager; }
+        }
+
+        private QueryManager QueryManager
+        {
+            // Get the query manager
+            get { return _queryManager; }
         }
 
         public bool BegunStartup
@@ -171,7 +164,7 @@ namespace TreasureHunterCore.Administrative
                 if (Status == AppStatus.FAILURE)
                 {
                     // App is in a Error state
-                    _exitFlag = true;
+                    ExitFlag = true;
                 }
                 return true;
             }
@@ -197,15 +190,14 @@ namespace TreasureHunterCore.Administrative
             // Run App Startup Sequence
             BegunStartup = true;
             LogMessage("Begining startup sequence ... ", TextLogger.LogLevel.INFO);
-            ViewManager.EnqueueView(new ViewStartup(this));
-            ViewManager.ShowCurrentView();
+
+            // Add + Show the StartupView
+            ViewManager.AddView(new ViewStartup(this));
+            ViewManager.NextView();
+            ViewManager.DrawCurrentView();
 
             // Perform Load + App Setup Process
-            PerformStartup();
-
-            // Queue the Execute view and remove the startup one
-            ViewManager.EnqueueView(new ViewExecute(this));
-            ViewManager.DequeueView();
+            PerformStartup();            
 
             LogMessage("Finished startup sequence ... ", TextLogger.LogLevel.INFO);
             FinishedStartup = true;
@@ -218,6 +210,9 @@ namespace TreasureHunterCore.Administrative
             BegunExecution = true;
             LogMessage("Begining execution sequence ... ", TextLogger.LogLevel.INFO);
 
+            ViewManager.AddView(new ViewExecute(this));
+            ViewManager.NextView();
+            ViewManager.DrawCurrentView();
 
             LogMessage("Finished cleanup sequence ... ", TextLogger.LogLevel.INFO);
             FinishedExecution = true;
@@ -229,7 +224,12 @@ namespace TreasureHunterCore.Administrative
             // Run App Cleanup Sequence
             BegunCleanup = true;
             LogMessage("Begining cleanup sequence ... ", TextLogger.LogLevel.INFO);
-            
+
+            // Add + Show the StartupView
+            ViewManager.AddView(new ViewShutdown(this));
+            ViewManager.NextView();
+            ViewManager.DrawCurrentView();
+
             // Perform Load + App Setup Process
             PerformShutdown();
 
@@ -238,55 +238,27 @@ namespace TreasureHunterCore.Administrative
             return;
         }
 
-        private void EvaluateStartupCallbacks()
-        {
-            // Evaluate all startup callbacks
-            foreach (PresequenceCallback item in _callbacksStartup)
-            {
-                AppStatus newStatus = item.Invoke(this);
-                UpdateStatus(newStatus);
-            }
-            return;
-        }
-
-        private void EvaluateExecuteCallbacks()
-        {
-            // Evaluate all startup callbacks
-            foreach (PresequenceCallback item in _callbacksExecute)
-            {
-                AppStatus newStatus = item.Invoke(this);
-                UpdateStatus(newStatus);
-            }
-            return;
-        }
-
-        private void EvaluateShutdownCallbacks()
-        {
-            // Evaluate all startup callbacks
-            foreach (PresequenceCallback item in _callbacksCleanup)
-            {
-                AppStatus newStatus = item.Invoke(this);
-                UpdateStatus(newStatus);
-            }
-            return;
-        }
-
         private void PerformStartup()
         {
             // Perform the App startup sequence
-            EvaluateStartupCallbacks();
+
+            ViewManager.Initialize();
+            QueryManager.Initialize();
+
             return;
         }
 
         private void PerformShutdown()
         {
             // Perform the App startup sequence
-            EvaluateShutdownCallbacks();
+
+            ViewManager.Cleanup();
+            QueryManager.Cleanup();
+
             return;
         }
 
         #endregion
-
 
     }
 }
