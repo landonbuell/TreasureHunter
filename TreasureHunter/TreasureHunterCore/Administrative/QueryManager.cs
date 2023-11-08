@@ -20,7 +20,7 @@ namespace TreasureHunterCore.Administrative
     internal class QueryManager : Manager
     {
         // Governs all user Input
-        private static readonly string QUERY_MANAGER = "Query Manager";
+        private static readonly string QUERY_MANAGER = "QueryManager";
 
         private string? _userInput;
 

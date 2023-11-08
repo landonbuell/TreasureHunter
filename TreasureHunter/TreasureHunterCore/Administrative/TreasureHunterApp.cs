@@ -28,6 +28,7 @@ namespace TreasureHunterCore.Administrative
         private bool[] _statusFlags;
 
         private ViewManager _viewManager;
+        private TaskManager _taskManager;
         private QueryManager _queryManager;
 
         internal TreasureHunterApp(
@@ -41,7 +42,9 @@ namespace TreasureHunterCore.Administrative
             _statusFlags = new bool[7];
 
             _viewManager = new ViewManager(this);
+            _taskManaer = new TaskManager(this);
             _queryManager = new QueryManager(this);
+
 
             InitStatusFlags();
         }
@@ -77,6 +80,12 @@ namespace TreasureHunterCore.Administrative
         {
             // Get the view Manager
             get { return _viewManager; }
+        }
+
+        private TaskManager TaskManager
+        {
+            // Get the Task Manager
+            get { return _taskManager; }
         }
 
         private QueryManager QueryManager
@@ -190,11 +199,6 @@ namespace TreasureHunterCore.Administrative
             BegunStartup = true;
             LogMessage("Begining startup sequence ... ", TextLogger.LogLevel.INFO);
 
-            // Add + Show the StartupView
-            ViewManager.AddView(new ViewStartup(this));
-            ViewManager.NextView();
-            ViewManager.DrawCurrentView();
-
             // Perform Load + App Setup Process
             PerformStartup();            
 
@@ -209,9 +213,11 @@ namespace TreasureHunterCore.Administrative
             BegunExecution = true;
             LogMessage("Begining execution sequence ... ", TextLogger.LogLevel.INFO);
 
-            ViewManager.AddView(new ViewExecute(this));
-            ViewManager.NextView();
-            ViewManager.DrawCurrentView();
+            while ((TaskManager.IsEmpty() == false) && (Status == 0))
+            {
+                TaskManager.ExecuteCurrentTask();
+                TaskManager.NextTask();
+            }
 
             LogMessage("Finished cleanup sequence ... ", TextLogger.LogLevel.INFO);
             FinishedExecution = true;
@@ -223,11 +229,6 @@ namespace TreasureHunterCore.Administrative
             // Run App Cleanup Sequence
             BegunCleanup = true;
             LogMessage("Begining cleanup sequence ... ", TextLogger.LogLevel.INFO);
-
-            // Add + Show the StartupView
-            ViewManager.AddView(new ViewShutdown(this));
-            ViewManager.NextView();
-            ViewManager.DrawCurrentView();
 
             // Perform Load + App Setup Process
             PerformShutdown();

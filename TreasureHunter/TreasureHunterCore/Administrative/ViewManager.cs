@@ -18,7 +18,7 @@ namespace TreasureHunterCore.Administrative
     internal class ViewManager : Manager
     {
         // Governs the Currently Active View and Accepts User Input
-        private static readonly string VIEW_MANAGER = "View Manager";
+        private static readonly string VIEW_MANAGER = "ViewManager";
         private static readonly int MAX_QUEUE_SIZE = 1024;
 
         private LinkedList<ViewBase> _queue;
@@ -101,67 +101,13 @@ namespace TreasureHunterCore.Administrative
             return;
         }
 
-        public void AddView(ViewBase view)
-        {
-            // Add a new view to the tail end of the Queue
-            if (QueueSize >= MAX_QUEUE_SIZE)
-            {
-                RemoveOldest();
-            }
-            _queue.AddLast(view);
-            NumViewsQueued += 1;
-            if (QueueSize == 1)
-            {
-                _current = _queue.First;
-            }
-            return;
-        }
 
-        public void NextView()
-        {
-            // Move to the next view
-            _current = _current.Next;
-            return;
-        }
-
-        public void PrevView()
-        {
-            // Moce to the prev view
-            _current = _current.Previous;
-            return;
-        }
 
         #endregion
 
         #region Private Interface
 
-        public void RemoveOldest()
-        {
-            // Remove the oldest view in the chain
-            if (QueueSize > 0)
-            {
-                _queue.RemoveFirst();
-            }
-            if (QueueSize == 0)
-            {
-                _current = null;
-            }
-            return;
-        }
-
-        public void RemoveNewest()
-        {
-            // Remove the latest view in the chain
-            if (QueueSize > 0)
-            {
-                _queue.RemoveLast();
-            }
-            if (QueueSize == 0)
-            {
-                _current = null;
-            }
-            return;
-        }
+        
 
         #endregion
     }
