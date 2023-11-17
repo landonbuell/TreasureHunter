@@ -14,7 +14,7 @@ using TreasureHunterCore.Views;
 
 namespace TreasureHunterCore.Operations
 {
-    internal abstract class TaskBase
+    internal partial class TaskBase
     {
         // A task is an operation that the application invokes to change it's state
         private static uint _taskCounter = 0;
@@ -22,22 +22,22 @@ namespace TreasureHunterCore.Operations
         private readonly uint _taskId;
         private readonly TreasureHunterApp _app;
         private ViewBase _view;
-        private int _status;
+        private TaskReport _report;
 
         protected List<Action> _preRunCallbacks;
         protected List<Action> _postRunCallbacks;
 
-        protected TaskBase(
+        internal TaskBase(
             TreasureHunterApp app)
         {
             // Constructor
             _taskId = TaskCounter;
             _app = app;
-            _view = null;
-            _status = 0;
+            _view = new PlaceholderView(app);
+            _report = new TaskReport(TaskStatus.NO_ERROR);
 
             _preRunCallbacks = new List<Action>();
-            _postRunCallbacks = new List<Action>(); 
+            _postRunCallbacks = new List<Action>();
 
             if (app.Settings.IsDebugMode == true)
             {
@@ -60,10 +60,10 @@ namespace TreasureHunterCore.Operations
             get { return _taskId; }
         }
 
-        protected TreasureHunterApp App 
+        protected TreasureHunterApp App
         {
             // Return the Parent application
-            get { return _app; } 
+            get { return _app; }
         }
 
         protected ViewBase View
@@ -73,11 +73,31 @@ namespace TreasureHunterCore.Operations
             set { _view = value; }
         }
 
-        public int Status
+        public TaskStatus Status
         {
             // Get or set the Task's status
-            get { return _status; }
-            protected set { _status = value; }
+            get { return _report.Status; }
+            protected set { _report.Status = value; }
+        }
+
+        public string GetReportMessage()
+        {
+            // Get the Report's Message
+            return _report.GetMessage();
+        }
+
+        public DateTime TaskStartTime
+        {
+            // Get or set the start time
+            get { return _report.TimeStart; }
+            private set { _report.TimeStart = value; }
+        }
+
+        public DateTime TaskFinishTime
+        {
+            // Get or set the finish time
+            get { return _report.TimeFinish; }
+            private set { _report.TimeFinish = value; }
         }
 
         public static uint TaskCounter
@@ -87,9 +107,6 @@ namespace TreasureHunterCore.Operations
             private set { _taskCounter = value; }
         }
 
-
-
-
         #endregion
 
         #region Public Interface
@@ -97,11 +114,20 @@ namespace TreasureHunterCore.Operations
         public void Run()
         {
             // Execute this Task
+            TaskStartTime = DateTime.Now;
             ExecutePreRunCallbacks();
             RunBody();
             ExecutePostRunCallbacks();
+            TaskFinishTime = DateTime.Now;
+            LogReport();
+            return;
         }
 
+        public static bool IsNullTask(TaskBase task)
+        {
+            // Return T/F if the provided task is of NULL type
+            return ((task == null) || (task.GetType() == typeof(TaskNull)));
+        }
 
         #endregion
 
@@ -117,6 +143,7 @@ namespace TreasureHunterCore.Operations
         protected virtual void RegisterDebugCallbacks()
         {
             // Register any pre/post run callbacks
+            return;
         }
 
 
@@ -142,7 +169,16 @@ namespace TreasureHunterCore.Operations
 
         #endregion
 
+        #region Private Interface
 
+        private void LogReport()
+        {
+            // Log the Task Completion Report to the app Logger
+            // TODO: THIS!
+            return;
+        }
+
+        #endregion
 
     }
 }

@@ -20,7 +20,7 @@ namespace TreasureHunterCore.Administrative
         private static readonly int MAX_QUEUE_SIZE = 1024;
 
         private LinkedList<TaskBase> _queue;
-        private LinkedListNode<TaskBase> _currentTask;
+        private LinkedListNode<TaskBase>? _front;
 
         private int[] _taskCounters;
 
@@ -30,7 +30,7 @@ namespace TreasureHunterCore.Administrative
         {
             // Constructor
             _queue = new LinkedList<TaskBase>();
-            _currentTask = null;
+            _front = new LinkedListNode<TaskBase>(new TaskNull(app));
             _taskCounters = new int[2];
         }
 
@@ -45,7 +45,11 @@ namespace TreasureHunterCore.Administrative
         public TaskBase CurrentTask
         {
             // Get or set the current task
-            get { return _currentTask.ValueRef; }
+            get 
+            { 
+                if (FrontIsValid == false) { return null; }
+                return _front.ValueRef;
+            }
         }
 
         public int TasksQueued
@@ -68,13 +72,17 @@ namespace TreasureHunterCore.Administrative
             get { return _queue.Count; }
         }
 
-
+        public bool FrontIsValid
+        {
+            // Return T/F if the front of the queue is not null
+            get { return !TaskBase.IsNullTask(_front.ValueRef); }
+        }
 
         #endregion
 
         #region Public Interface
 
-        public void EnqueueTask( TaskBase newTask)
+        public void Enqueue( TaskBase newTask)
         {
             // Enqueue a new task to the Task Manager
             if (QueueSize >= MAX_QUEUE_SIZE)
@@ -85,32 +93,68 @@ namespace TreasureHunterCore.Administrative
             TasksQueued += 1;
             if (QueueSize == 1)
             {
-                _currentTask = _queue.First;
+                _front = _queue.First;
             }
             return;
         }
 
-        public void NextTask()
+        public void EnqueueImmediate(TaskBase newTask)
+        {
+            // Enque an new task IMMEDIATELY after the current task
+            if (_queue.Count == 0)
+            {
+                // is empty, just add to the front of the DLL
+                _queue.AddFirst(newTask);
+                return;
+            }
+            if (_front == null)
+            {
+                // No front? Just add to the end of the DLL
+                _queue.AddLast(newTask);
+                return;
+            }
+            // Otherwise, add after current
+            _queue.AddAfter(_front, newTask);
+            return;
+        }
+
+        public bool MoveToNext()
         {
             // Move to the next task
+            if (_queue.Count == 0)
+            {
+                // Empty Queue - cannot move
+                return false;
+            }
+            if (_front == null)
+            {
+                // No front? Just move to first item
+                _front = _queue.First;
+            }
+            else
+            {
+                // Front set, move to next
+                _front = _front.Next;
+                return (_front != null);
+            }
+            return true;
         }
 
         public int ExecuteCurrentTask()
         {
-            if (_currentTask == null)
+            return ExecuteCurrentTask(_front);
+        }
+
+        public int ExecuteCurrentTask(LinkedListNode<TaskBase>? _front)
+        {
+            if ( FrontIsValid == false)
             {
                 // Not task set
                 return -1;
             }
-            // Otherwise ...
-            _currentTask.Value.Run();
-            return _currentTask.Value.Status;
-        }
 
-        public bool IsEmpty()
-        {
-            // Get T/F if the queue is empty
-            return (_queue.Count == 0);
+            _front.Value.Run();
+            return (int)_front.Value.Status;
         }
 
         public bool IsFull()
@@ -132,7 +176,7 @@ namespace TreasureHunterCore.Administrative
             }
             if (QueueSize == 0)
             {
-                _currentTask = null;
+                _front = null;
             }
             return;
         }
@@ -146,7 +190,7 @@ namespace TreasureHunterCore.Administrative
             }
             if (QueueSize == 0)
             {
-                _currentTask = null;
+                _front = null;
             }
             return;
         }

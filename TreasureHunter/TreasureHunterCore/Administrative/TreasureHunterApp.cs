@@ -42,7 +42,7 @@ namespace TreasureHunterCore.Administrative
             _statusFlags = new bool[7];
 
             _viewManager = new ViewManager(this);
-            _taskManaer = new TaskManager(this);
+            _taskManager = new TaskManager(this);
             _queryManager = new QueryManager(this);
 
 
@@ -213,10 +213,10 @@ namespace TreasureHunterCore.Administrative
             BegunExecution = true;
             LogMessage("Begining execution sequence ... ", TextLogger.LogLevel.INFO);
 
-            while ((TaskManager.IsEmpty() == false) && (Status == 0))
+            while ((TaskManager.FrontIsValid == true) && (Status == 0))
             {
                 TaskManager.ExecuteCurrentTask();
-                TaskManager.NextTask();
+                TaskManager.MoveToNext();
             }
 
             LogMessage("Finished cleanup sequence ... ", TextLogger.LogLevel.INFO);
