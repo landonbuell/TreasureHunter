@@ -213,10 +213,10 @@ namespace TreasureHunterCore.Administrative
             BegunExecution = true;
             LogMessage("Begining execution sequence ... ", TextLogger.LogLevel.INFO);
 
-            while ((TaskManager.FrontIsValid == true) && (Status == 0))
+            while ((TaskManager.CurrentTaskValid == true) && (Status != AppStatus.FAILURE))
             {
                 TaskManager.ExecuteCurrentTask();
-                TaskManager.MoveToNext();
+                TaskManager.MoveToNextTask();
             }
 
             LogMessage("Finished cleanup sequence ... ", TextLogger.LogLevel.INFO);
