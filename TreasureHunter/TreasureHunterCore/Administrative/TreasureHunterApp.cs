@@ -149,6 +149,20 @@ namespace TreasureHunterCore.Administrative
             return;
         }
 
+        public void UpdateStatus(AppStatus newStatus, string reason)
+        {
+            // Update the internal status, and justify
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append("Updating AppStatus from ");
+            stringBuilder.AppendFormat("{0} -> {1} ", Status.ToString(), newStatus.ToString());
+            stringBuilder.Append("For reason: ");
+            stringBuilder.Append(reason);
+            // Log the message + update status
+            LogMessage(stringBuilder.ToString(),TextLogger.LogLevel.INFO);
+            Status = newStatus;
+            return;
+        }
+
         public int Run()
         {
             // Run the App's execution

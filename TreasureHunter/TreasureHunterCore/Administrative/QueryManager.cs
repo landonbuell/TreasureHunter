@@ -22,14 +22,14 @@ namespace TreasureHunterCore.Administrative
         // Governs all user Input
         private static readonly string QUERY_MANAGER = "QueryManager";
 
-        private string? _userInput;
+        private string _userInput;
 
         internal QueryManager(
             TreasureHunterApp app) :
             base(app, QUERY_MANAGER)
         {
             // Constructor
-            _userInput = null;
+            _userInput = "";
         }
 
 

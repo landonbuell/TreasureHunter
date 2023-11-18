@@ -19,57 +19,39 @@ namespace TreasureHunterCore.Administrative
     {
         // Governs the Currently Active View and Accepts User Input
         private static readonly string VIEW_MANAGER = "ViewManager";
-        private static readonly int MAX_QUEUE_SIZE = 1024;
 
-        private LinkedList<ViewBase> _queue;
-        private LinkedListNode<ViewBase> _current;
+        private ViewBase _view;
+        private bool _locked;
 
-        private int[] _viewCounters;
-        
         internal ViewManager(
             TreasureHunterApp app) :
             base(app, VIEW_MANAGER)
         {
             // Constructor
-            _queue = new LinkedList<ViewBase>();
-            _current = null;
-            _viewCounters = new int[2];
-
-            AddView(new PlaceholderView(App));
+            _view = new PlaceholderView(App);
+            _locked = false;    
         }
 
         ~ViewManager()
         {
             // Destructor
-            _queue.Clear();
+            _locked = false;
         }
 
         #region Getters and Setters
 
         public ViewBase CurrentView
         {
-            // Get the Current View
-            get { return _current.ValueRef; }
+            // Get the current View
+            get { return _view; }
+            private set { _view = value; } 
         }
 
-        public int NumViewsShown
+        public bool IsLocked
         {
-            // Get the number of views shown
-            get { return _viewCounters[0]; }
-            private set { _viewCounters[0] = value; }
-        }
-
-        public int NumViewsQueued
-        {
-            // Get the number of views queued
-            get { return _viewCounters[1]; }
-            private set { _viewCounters[1] = value; }
-        }
-
-        private int QueueSize
-        {
-            // Get the number of items currently in the queue
-            get { return _queue.Count; }
+            // Return T/F if the current view is locked
+            get { return _locked; }
+            private set { _locked = value; }
         }
 
         #endregion
@@ -90,14 +72,7 @@ namespace TreasureHunterCore.Administrative
             {
                 ClearConsole();
             }
-            if (CurrentView == null)
-            {
-                // Can't draw a NULL view!
-                // TODO - Handle this!
-                return;
-            }
-            CurrentView.Draw();
-            NumViewsShown += 1;
+            // TODO; Implement this
             return;
         }
 
