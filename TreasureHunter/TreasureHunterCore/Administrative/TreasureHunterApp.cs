@@ -214,7 +214,8 @@ namespace TreasureHunterCore.Administrative
             LogMessage("Begining startup sequence ... ", TextLogger.LogLevel.INFO);
 
             // Perform Load + App Setup Process
-            PerformStartup();            
+            PerformStartup();  
+            
 
             LogMessage("Finished startup sequence ... ", TextLogger.LogLevel.INFO);
             FinishedStartup = true;
@@ -255,9 +256,12 @@ namespace TreasureHunterCore.Administrative
         private void PerformStartup()
         {
             // Perform the App startup sequence
-
+            TaskManager.Initialize();
             ViewManager.Initialize();
             QueryManager.Initialize();
+
+
+            // 
 
             return;
         }
@@ -265,7 +269,7 @@ namespace TreasureHunterCore.Administrative
         private void PerformShutdown()
         {
             // Perform the App startup sequence
-
+            TaskManager.Cleanup();
             ViewManager.Cleanup();
             QueryManager.Cleanup();
 

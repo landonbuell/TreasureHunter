@@ -2,7 +2,7 @@
  * Repository:      TreasureHunter
  * Solution:        TreatureHunter
  * Project:         TreasureHunterCore
- * Namespace:       Views
+ * Namespace:       Operations
  * 
  * File:            TaskBase.cs
  * Author:          Landon Buell

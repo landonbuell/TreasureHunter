@@ -20,9 +20,9 @@ namespace TreasureHunterCore.Views
     {
         // A View is a "menu" or "window" that Accepts User Input
         // and can perform an action based on that input
-        private static readonly string SPACE_04_CHARS = new(' ', 4);
-        private static readonly string SPACE_08_CHARS = new(' ', 8);
-        private static readonly string SPACE_16_CHARS = new(' ', 16);
+        protected static readonly string SPACE_04_CHARS = new(' ', 4);
+        protected static readonly string SPACE_08_CHARS = new(' ', 8);
+        protected static readonly string SPACE_16_CHARS = new(' ', 16);
 
         private readonly string _viewName;
         private readonly TreasureHunterApp _app; 
