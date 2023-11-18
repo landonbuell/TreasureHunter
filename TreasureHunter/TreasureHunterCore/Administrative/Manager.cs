@@ -76,6 +76,13 @@ namespace TreasureHunterCore.Administrative
 
         #region Protected Interface
 
+        protected void LogMessage(string message, TextLogger.LogLevel logLevel)
+        {
+            // Log a Message to the App's Logger
+            App.LogMessage(message, logLevel);
+            return;
+        }
+
         #endregion
 
         #region Private Interface

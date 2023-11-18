@@ -4,7 +4,7 @@
  * Project:         TreasureHunterCore
  * Namespace:       Views
  * 
- * File:            BaseView.cs
+ * File:            ViewBase.cs
  * Author:          Landon Buell
  * Date:            Feb 2023 
  */

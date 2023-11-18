@@ -9,13 +9,7 @@
  * Date:            Feb 2023 
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using TreasureHunterCore.Administrative;
+using TreasureHunterCore.Core;
 
 namespace TreasureHunterCore.Gamepiece
 {
@@ -23,13 +17,12 @@ namespace TreasureHunterCore.Gamepiece
     {
         // Represents User's GamePeice
 
-        internal Player( UserProfile profile) :
-            base(profile.GamePieceData)
+        internal Player(
+            GamePieceData pieceData) :
+            base(pieceData)
         {
             // Constructor
         }
-
-
 
     }
 }
